@@ -1,10 +1,10 @@
-Legendary shell configuration for Zsh. Works on **macOS** and **Linux** (Arch, Ubuntu/Debian, Fedora). Based on [omarchy-zsh](https://github.com/omacom-io/omarchy-zsh) by [Ryan Hughes](https://github.com/ryanhughes).
+Legendary shell configuration for Zsh. Works on **macOS** and **Linux** (Arch, Ubuntu/Debian, Fedora). Based on [omarchy-zsh](https://github.com/basecamp/omarchy-zsh) by [Ryan Hughes](https://github.com/ryanhughes).
 
 ## What's different from omarchy-zsh?
 
 - **Cross-platform** — works on macOS and Linux. No pacman, no `/usr/share/`. Clone it anywhere.
 - **Zsh plugins via git clone** — syntax highlighting, autosuggestions, completions, and fzf-tab with no plugin manager or system packages required
-- **Enhanced tmux functions** — `tdl`, `tdlm`, and `tsl` from [Omarchy](https://github.com/omacom-io/omarchy) for dev layouts and swarm panes
+- **Enhanced tmux functions** — `tdl`, `tdlm`, and `tsl` from [Omarchy](https://github.com/basecamp/omarchy) for dev layouts and swarm panes
 - **Tab completion that works** — `compinit` enabled with case-insensitive matching and fzf-tab integration
 
 ## Install
@@ -90,4 +90,4 @@ Restore your shell config from backups (saved as `~/.zshrc.backup-*` and `~/.bas
 
 ## Credits
 
-Originally created by [Ryan Hughes](https://github.com/ryanhughes) as [omarchy-zsh](https://github.com/omacom-io/omarchy-zsh). Licensed under MIT.
+Originally created by [Ryan Hughes](https://github.com/ryanhughes) as [omarchy-zsh](https://github.com/basecamp/omarchy-zsh). Licensed under MIT.
