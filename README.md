@@ -2,12 +2,46 @@ Legendary shell configuration for Zsh. Based on [omarchy-zsh](https://github.com
 
 ## What's different from omarchy-zsh?
 
-- **Distro-agnostic** — no pacman, no `/usr/share/`. Clone it anywhere, works on Arch, Fedora, Ubuntu, etc.
+- **Distro-agnostic** — no pacman, no `/usr/share/`. Clone it anywhere, works on Arch, Fedora, Ubuntu, macOS, etc.
 - **Zsh plugins via git clone** — syntax highlighting, autosuggestions, completions, and fzf-tab with no plugin manager or system packages required
 - **Enhanced tmux functions** — `tdl`, `tdlm`, and `tsl` from [Omarchy](https://github.com/omacom-io/omarchy) for dev layouts and swarm panes
 - **Tab completion that works** — `compinit` enabled with case-insensitive matching and fzf-tab integration
 
 ## Install
+
+### Prerequisites
+
+- **git** and **zsh**
+- Optional but recommended: [fzf](https://github.com/junegunn/fzf), [starship](https://starship.rs), [zoxide](https://github.com/ajeetdsouza/zoxide), [eza](https://github.com/eza-community/eza)
+
+<details>
+<summary><strong>Linux</strong></summary>
+
+Install prerequisites with your package manager, e.g.:
+
+```bash
+# Arch
+sudo pacman -S zsh fzf starship zoxide eza
+
+# Ubuntu/Debian
+sudo apt install zsh fzf
+# starship, zoxide, and eza — install via their official instructions
+```
+
+</details>
+
+<details>
+<summary><strong>macOS</strong></summary>
+
+macOS ships with zsh. Install the optional tools via [Homebrew](https://brew.sh):
+
+```bash
+brew install fzf starship zoxide eza
+```
+
+</details>
+
+### Setup
 
 ```bash
 # Clone to ~/.local/share/legendary-zsh
@@ -16,6 +50,8 @@ git clone git@github.com:jzetterman/legendary-zsh.git ~/.local/share/legendary-z
 # Run setup (clones plugins, installs .zshrc, .bashrc, .inputrc)
 ~/.local/share/legendary-zsh/bin/legendary-setup-zsh
 ```
+
+Restart your terminal to activate zsh.
 
 ## Update
 
