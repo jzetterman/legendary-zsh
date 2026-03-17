@@ -150,7 +150,10 @@ prompt_fastfetch() {
 if [ -d "$LEGENDARY_ZSH_HOME/.git" ]; then
   echo "Existing installation found. Updating..."
   install_deps
-  "$LEGENDARY_ZSH_HOME/bin/legendary-update"
+  git -C "$LEGENDARY_ZSH_HOME" pull --ff-only
+  if [ -x "$LEGENDARY_ZSH_HOME/bin/legendary-migrate" ]; then
+    "$LEGENDARY_ZSH_HOME/bin/legendary-migrate"
+  fi
 elif [ -d "$LEGENDARY_ZSH_HOME" ]; then
   echo "Existing directory found but not a valid install. Re-installing..."
   install_deps
