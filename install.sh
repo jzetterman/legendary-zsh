@@ -146,6 +146,7 @@ prompt_fastfetch() {
 if [ -d "$LEGENDARY_ZSH_HOME" ]; then
   echo "Existing installation found. Updating..."
   "$LEGENDARY_ZSH_HOME/bin/legendary-update"
+  install_deps
 else
   echo "Installing legendary-zsh..."
   install_deps
