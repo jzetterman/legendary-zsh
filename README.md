@@ -9,43 +9,18 @@ Legendary shell configuration for Zsh. Based on [omarchy-zsh](https://github.com
 
 ## Install
 
-### Prerequisites
-
-- **git** and **zsh**
-- Optional but recommended: [fzf](https://github.com/junegunn/fzf), [starship](https://starship.rs), [zoxide](https://github.com/ajeetdsouza/zoxide), [eza](https://github.com/eza-community/eza)
-
-<details>
-<summary><strong>Linux</strong></summary>
-
-Install prerequisites with your package manager, e.g.:
-
-```bash
-# Arch
-sudo pacman -S zsh fzf starship zoxide eza
-
-# Ubuntu/Debian
-sudo apt install zsh fzf
-# starship, zoxide, and eza — install via their official instructions
-```
-
-</details>
-
-<details>
-<summary><strong>macOS</strong></summary>
-
-macOS ships with zsh. Install the optional tools via [Homebrew](https://brew.sh):
-
-```bash
-brew install fzf starship zoxide eza
-```
-
-</details>
-
-### Install
-
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jzetterman/legendary-zsh/master/install.sh | bash
 ```
+
+The installer automatically detects your OS and installs all dependencies:
+
+| | Package Manager | Packages |
+|---|---|---|
+| **macOS** | Homebrew | git, zsh, fzf, starship, zoxide, eza |
+| **Arch** | pacman | git, zsh, fzf, starship, zoxide, eza |
+| **Ubuntu/Debian** | apt + official installers | git, zsh, fzf, starship, zoxide, eza |
+| **Fedora** | dnf + official installers | git, zsh, fzf, starship, zoxide, eza |
 
 Restart your terminal to activate zsh.
 
