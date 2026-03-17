@@ -1,11 +1,22 @@
-Legendary shell configuration for Zsh. Works on **macOS** and **Linux** (Arch, Ubuntu/Debian, Fedora). Based on [omarchy-zsh](https://github.com/omacom-io/omarchy-zsh) by [Ryan Hughes](https://github.com/ryanhughes).
+Legendary shell configuration for Zsh. Works on **macOS** and **Linux** (Arch, Ubuntu/Debian, Fedora). Originally based on [omarchy-zsh](https://github.com/omacom-io/omarchy-zsh) by [Ryan Hughes](https://github.com/ryanhughes).
 
-## What's different from omarchy-zsh?
+## Features
 
-- **Cross-platform** — works on macOS and Linux. No pacman, no `/usr/share/`. Clone it anywhere.
-- **Zsh plugins via git clone** — syntax highlighting, autosuggestions, completions, and fzf-tab with no plugin manager or system packages required
-- **Enhanced tmux functions** — `tdl`, `tdlm`, and `tsl` from [Omarchy](https://github.com/basecamp/omarchy) for dev layouts and swarm panes
-- **Tab completion that works** — `compinit` enabled with case-insensitive matching and fzf-tab integration
+### Tmux dev layouts from Omarchy
+
+The tmux functions from [Omarchy](https://github.com/basecamp/omarchy) are incredibly useful for terminal-based development. I've brought `tdl`, `tdlm`, and `tsl` into legendary-zsh so you get one-command dev layouts — an editor pane, AI assistant pane, and terminal — without any manual window management.
+
+### Quality of life
+
+Out of the box, zsh is missing a lot. legendary-zsh fixes that:
+
+- **Syntax highlighting as you type** — commands light up green when valid, red when not, before you hit enter
+- **Autosuggestions from history** — faint inline completions pulled from your command history, accept with the right arrow key
+- **Fuzzy search everything** — files, git log, command history, directories, and shell variables all searchable via fzf keybindings
+- **Tab completion that actually works** — case-insensitive, fzf-powered, with file previews and color
+- **Smart directory navigation** — `z` learns your most-used directories so you can jump to them by partial name
+- **Modern `ls`** — `eza` replaces `ls` with color, icons, and git status built in
+- **Cross-platform** — one install command works on macOS, Arch, Ubuntu/Debian, and Fedora
 
 ## Install
 
@@ -70,6 +81,8 @@ graph LR
 - **Alt+C** - cd into selected directory
 
 ## Tmux Functions
+
+Ported from [Omarchy](https://github.com/basecamp/omarchy):
 
 - **`tdl <ai> [<ai2>]`** - Dev layout: editor (70%), AI pane (30%), terminal (15% bottom)
 - **`tdlm <ai> [<ai2>]`** - Multi-project: one `tdl` window per subdirectory
