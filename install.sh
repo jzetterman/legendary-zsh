@@ -8,7 +8,7 @@ LEGENDARY_ZSH_HOME="${HOME}/.local/share/legendary-zsh"
 install_deps() {
   local missing=()
 
-  for cmd in git zsh fzf starship zoxide eza; do
+  for cmd in git zsh fzf starship zoxide eza gum; do
     command -v "$cmd" &>/dev/null || missing+=("$cmd")
   done
 
@@ -102,6 +102,36 @@ install_deps() {
   fi
 }
 
+install_pkg() {
+  local pkg="$1"
+  if command -v "$pkg" &>/dev/null; then
+    return
+  fi
+
+  echo "Installing $pkg..."
+  if [[ "$OSTYPE" == darwin* ]]; then
+    brew install "$pkg"
+  elif command -v pacman &>/dev/null; then
+    sudo pacman -S --needed --noconfirm "$pkg"
+  elif command -v apt-get &>/dev/null; then
+    sudo apt-get install -y "$pkg"
+  elif command -v dnf &>/dev/null; then
+    sudo dnf install -y "$pkg"
+  fi
+}
+
+prompt_fastfetch() {
+  echo ""
+  if gum confirm "Would you like to install fastfetch and run it when new terminal sessions start?"; then
+    install_pkg fastfetch
+    ZSHRC="${HOME}/.zshrc"
+    if ! grep -qF 'fastfetch' "$ZSHRC"; then
+      printf '\n# Show system info on new terminal sessions\ncommand -v fastfetch &>/dev/null && fastfetch\n' >> "$ZSHRC"
+    fi
+    echo -e "\033[32m✓ fastfetch enabled\033[0m"
+  fi
+}
+
 # --- Main ---
 
 if [ -d "$LEGENDARY_ZSH_HOME" ]; then
@@ -113,4 +143,6 @@ else
 
   git clone https://github.com/jzetterman/legendary-zsh.git "$LEGENDARY_ZSH_HOME"
   "$LEGENDARY_ZSH_HOME/bin/legendary-setup-zsh"
+
+  prompt_fastfetch
 fi

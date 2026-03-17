@@ -17,10 +17,12 @@ The installer automatically detects your OS and installs all dependencies:
 
 | | Package Manager | Packages |
 |---|---|---|
-| **macOS** | Homebrew | git, zsh, fzf, starship, zoxide, eza |
-| **Arch** | pacman | git, zsh, fzf, starship, zoxide, eza |
-| **Ubuntu/Debian** | apt + official installers | git, zsh, fzf, starship, zoxide, eza |
-| **Fedora** | dnf + official installers | git, zsh, fzf, starship, zoxide, eza |
+| **macOS** | Homebrew | git, zsh, fzf, starship, zoxide, eza, gum |
+| **Arch** | pacman | git, zsh, fzf, starship, zoxide, eza, gum |
+| **Ubuntu/Debian** | apt + official installers | git, zsh, fzf, starship, zoxide, eza, gum |
+| **Fedora** | dnf + official installers | git, zsh, fzf, starship, zoxide, eza, gum |
+
+During installation you'll be prompted to optionally install [fastfetch](https://github.com/fastfetch-cli/fastfetch) to show system info when new terminal sessions start.
 
 Restart your terminal to activate zsh.
 
