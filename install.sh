@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 LEGENDARY_ZSH_HOME="${HOME}/.local/share/legendary-zsh"
 
@@ -150,8 +149,8 @@ else
   echo "Installing legendary-zsh..."
   install_deps
 
-  git clone https://github.com/jzetterman/legendary-zsh.git "$LEGENDARY_ZSH_HOME"
-  "$LEGENDARY_ZSH_HOME/bin/legendary-setup-zsh"
+  git clone https://github.com/jzetterman/legendary-zsh.git "$LEGENDARY_ZSH_HOME" || { echo "Error: git clone failed"; exit 1; }
+  "$LEGENDARY_ZSH_HOME/bin/legendary-setup-zsh" || { echo "Error: setup failed"; exit 1; }
 fi
 
 prompt_fastfetch
