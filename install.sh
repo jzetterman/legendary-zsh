@@ -124,20 +124,19 @@ prompt_fastfetch() {
   local state_dir="${HOME}/.local/state/legendary-zsh"
   mkdir -p "$state_dir"
 
-  # Already asked — don't ask again
+  # Already asked or already configured — don't ask again
   [ -f "$state_dir/fastfetch-prompted" ] && return
+  grep -qF 'fastfetch' "${HOME}/.zshrc" 2>/dev/null && return
 
   echo ""
   if gum confirm "Would you like to install fastfetch and run it when new terminal sessions start?" < /dev/tty; then
     install_pkg fastfetch
-    ZSHRC="${HOME}/.zshrc"
-    if ! grep -qF 'fastfetch' "$ZSHRC"; then
-      printf '\n# Show system info on new terminal sessions\ncommand -v fastfetch &>/dev/null && fastfetch\n' >> "$ZSHRC"
+    if ! grep -qF 'fastfetch' "${HOME}/.zshrc"; then
+      printf '\n# Show system info on new terminal sessions\ncommand -v fastfetch &>/dev/null && fastfetch\n' >> "${HOME}/.zshrc"
     fi
     echo -e "\033[32m✓ fastfetch enabled\033[0m"
   fi
 
-  # Record that we've asked, regardless of their choice
   touch "$state_dir/fastfetch-prompted"
 }
 
