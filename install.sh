@@ -150,21 +150,21 @@ prompt_fastfetch() {
 if [ -d "$LEGENDARY_ZSH_HOME/.git" ]; then
   echo "Existing installation found. Updating..."
   install_deps
-  git -C "$LEGENDARY_ZSH_HOME" pull --ff-only
+  git -C "$LEGENDARY_ZSH_HOME" pull --ff-only < /dev/null
   if [ -x "$LEGENDARY_ZSH_HOME/bin/legendary-migrate" ]; then
-    "$LEGENDARY_ZSH_HOME/bin/legendary-migrate"
+    "$LEGENDARY_ZSH_HOME/bin/legendary-migrate" < /dev/null
   fi
 elif [ -d "$LEGENDARY_ZSH_HOME" ]; then
   echo "Existing directory found but not a valid install. Re-installing..."
   install_deps
   rm -rf "$LEGENDARY_ZSH_HOME"
-  git clone https://github.com/jzetterman/legendary-zsh.git "$LEGENDARY_ZSH_HOME" || { echo "Error: git clone failed"; exit 1; }
-  "$LEGENDARY_ZSH_HOME/bin/legendary-setup-zsh" || { echo "Error: setup failed"; exit 1; }
+  git clone https://github.com/jzetterman/legendary-zsh.git "$LEGENDARY_ZSH_HOME" < /dev/null || { echo "Error: git clone failed"; exit 1; }
+  "$LEGENDARY_ZSH_HOME/bin/legendary-setup-zsh" < /dev/null || { echo "Error: setup failed"; exit 1; }
 else
   echo "Installing legendary-zsh..."
   install_deps
-  git clone https://github.com/jzetterman/legendary-zsh.git "$LEGENDARY_ZSH_HOME" || { echo "Error: git clone failed"; exit 1; }
-  "$LEGENDARY_ZSH_HOME/bin/legendary-setup-zsh" || { echo "Error: setup failed"; exit 1; }
+  git clone https://github.com/jzetterman/legendary-zsh.git "$LEGENDARY_ZSH_HOME" < /dev/null || { echo "Error: git clone failed"; exit 1; }
+  "$LEGENDARY_ZSH_HOME/bin/legendary-setup-zsh" < /dev/null || { echo "Error: setup failed"; exit 1; }
 fi
 
 prompt_fastfetch
