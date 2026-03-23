@@ -38,6 +38,9 @@ _shell_changed=false
 _original_shell=""
 if [ -f "${STATE_DIR}/original-shell" ]; then
   _original_shell="$(cat "${STATE_DIR}/original-shell")"
+elif [ "$(basename "$SHELL")" = "zsh" ]; then
+  # No record found — default to bash since we're uninstalling a zsh framework
+  _original_shell="$(command -v bash 2>/dev/null)"
 fi
 
 if [ -n "$_original_shell" ] && [ "$SHELL" != "$_original_shell" ]; then
