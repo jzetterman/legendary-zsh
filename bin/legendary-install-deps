@@ -92,7 +92,15 @@ elif command -v dnf &>/dev/null; then
         echo "Installing eza..."
         _arch="$(uname -m)"
         if [ "$_arch" = "x86_64" ] || [ "$_arch" = "aarch64" ]; then
-          curl -sSfL "https://github.com/eza-community/eza/releases/latest/download/eza_${_arch}-unknown-linux-gnu.tar.gz" | sudo tar xz -C /usr/local/bin/
+          sudo mkdir -p /usr/local/bin
+          _tmpfile="$(mktemp)"
+          if curl -sSfL "https://github.com/eza-community/eza/releases/latest/download/eza_${_arch}-unknown-linux-gnu.tar.gz" -o "$_tmpfile"; then
+            sudo tar xzf "$_tmpfile" -C /usr/local/bin/
+            sudo chmod +x /usr/local/bin/eza
+          else
+            echo "Warning: could not download eza. Skipping."
+          fi
+          rm -f "$_tmpfile"
         else
           echo "Warning: could not install eza for architecture $_arch. Skipping."
         fi
