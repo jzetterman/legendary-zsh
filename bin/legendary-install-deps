@@ -46,7 +46,7 @@ elif command -v apt-get &>/dev/null; then
         ;;
       zoxide)
         echo "Installing zoxide..."
-        curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+        PATH="$HOME/.local/bin:$PATH" curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
         ;;
       eza)
         echo "Installing eza..."

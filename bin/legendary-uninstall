@@ -1,0 +1,63 @@
+#!/bin/bash
+
+LEGENDARY_ZSH_HOME="${HOME}/.local/share/legendary-zsh"
+STATE_DIR="${HOME}/.local/state/legendary-zsh"
+
+echo "This will remove legendary-zsh and restore your previous configuration."
+echo ""
+wants_uninstall=false
+if command -v gum &>/dev/null; then
+  gum confirm "Uninstall legendary-zsh?" && wants_uninstall=true || true
+else
+  printf "Uninstall legendary-zsh? (y/N) "
+  read -r reply
+  [[ "$reply" =~ ^[Yy] ]] && wants_uninstall=true
+fi
+
+if [ "$wants_uninstall" != true ]; then
+  echo "Uninstall cancelled."
+  exit 0
+fi
+
+# Restore dotfiles from backups
+for dotfile in .zshrc .bashrc; do
+  current="${HOME}/${dotfile}"
+  latest_backup="$(ls -t "${HOME}/${dotfile}.backup-"* 2>/dev/null | head -1)"
+  if [ -n "$latest_backup" ]; then
+    cp "$latest_backup" "$current"
+    echo -e "\033[32m✓\033[0m Restored ${dotfile} from backup"
+  else
+    rm -f "$current"
+  fi
+done
+
+rm -f "${HOME}/.inputrc"
+
+# Restore original default shell
+_shell_changed=false
+_original_shell=""
+if [ -f "${STATE_DIR}/original-shell" ]; then
+  _original_shell="$(cat "${STATE_DIR}/original-shell")"
+elif [ "$(basename "$SHELL")" = "zsh" ]; then
+  # No record found — default to bash since we're uninstalling a zsh framework
+  _original_shell="$(command -v bash 2>/dev/null)"
+fi
+
+if [ -n "$_original_shell" ] && [ "$SHELL" != "$_original_shell" ]; then
+  echo "Restoring default shell to $(basename "$_original_shell")..."
+  if chsh -s "$_original_shell" || sudo chsh -s "$_original_shell" "$USER"; then
+    echo -e "\033[32m✓\033[0m Default shell restored to $(basename "$_original_shell")"
+    _shell_changed=true
+  else
+    echo "Warning: could not restore shell. Run: sudo chsh -s $_original_shell \$USER"
+  fi
+fi
+
+# Remove legendary-zsh directories
+rm -rf "$LEGENDARY_ZSH_HOME"
+rm -rf "$STATE_DIR"
+
+echo ""
+echo -e "\033[32m✓ legendary-zsh uninstalled\033[0m"
+echo ""
+echo -e "\033[1;33m⚠  You must log out and back in for changes to take effect.\033[0m"
