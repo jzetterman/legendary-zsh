@@ -1,0 +1,48 @@
+#!/bin/bash
+set -e
+
+PATHS_FILE="${HOME}/.config/legendary-zsh/paths"
+
+usage() {
+  cat <<EOF
+Usage: legendary-path-add <directory>
+
+Appends <directory> to $PATHS_FILE so it is added to PATH in new shells.
+Use \$HOME or ~/ for paths under your home directory.
+EOF
+}
+
+if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  usage
+  exit 1
+fi
+
+entry="$1"
+
+# Expand leading ~ for existence check, but store the original form so
+# $HOME/~ entries remain portable across users.
+resolved="${entry/#\~/$HOME}"
+eval "resolved=\"$resolved\""
+
+if [ ! -d "$resolved" ]; then
+  echo "Warning: $resolved does not exist (adding anyway)."
+fi
+
+mkdir -p "$(dirname "$PATHS_FILE")"
+touch "$PATHS_FILE"
+
+# Skip if an equivalent line already exists (ignoring comments/whitespace).
+while IFS= read -r existing || [ -n "$existing" ]; do
+  existing="${existing%%#*}"
+  existing="${existing#"${existing%%[![:space:]]*}"}"
+  existing="${existing%"${existing##*[![:space:]]}"}"
+  [ -z "$existing" ] && continue
+  if [ "$existing" = "$entry" ] || [ "$existing" = "$resolved" ]; then
+    echo "Already present in $PATHS_FILE: $existing"
+    exit 0
+  fi
+done < "$PATHS_FILE"
+
+printf '%s\n' "$entry" >> "$PATHS_FILE"
+echo "Added $entry to $PATHS_FILE"
+echo "Open a new shell or run: source ~/.zshrc"

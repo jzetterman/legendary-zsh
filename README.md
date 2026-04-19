@@ -93,6 +93,25 @@ Ported from [Omarchy](https://github.com/basecamp/omarchy):
 
 Add your own configuration at the bottom of `~/.zshrc` after the legendary-zsh loading.
 
+### Adding directories to PATH
+
+Two ways to add a directory to your `PATH` that survive new shells, reboots, and `legendary-update`:
+
+**Interactively** — use the helper:
+
+```bash
+legendary-path-add ~/.config/hypr/scripts
+```
+
+**Manually** — edit `~/.config/legendary-zsh/paths` (one directory per line, `#` comments allowed):
+
+```
+# Hyprland helper scripts
+$HOME/.config/hypr/scripts
+```
+
+Both write to the same file. Entries support `$HOME` and `~/`, duplicates are skipped, and directories that don't exist at shell startup are silently ignored. Open a new shell (or `source ~/.zshrc`) to pick up changes.
+
 ## Uninstall
 
 ```bash

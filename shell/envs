@@ -50,6 +50,21 @@ _lz_prepend "$HOME/.local/bin"
 # Legendary-zsh scripts
 _lz_append "$HOME/.local/share/legendary-zsh/bin"
 
+# User-defined paths from ~/.config/legendary-zsh/paths (one dir per line,
+# `#` comments supported). Prepended so user entries take priority. Add entries
+# manually or via `legendary-path-add <dir>`.
+_lz_user_paths="$HOME/.config/legendary-zsh/paths"
+if [ -r "$_lz_user_paths" ]; then
+  while IFS= read -r _lz_line || [ -n "$_lz_line" ]; do
+    _lz_line="${_lz_line%%#*}"
+    _lz_line="${_lz_line#"${_lz_line%%[![:space:]]*}"}"
+    _lz_line="${_lz_line%"${_lz_line##*[![:space:]]}"}"
+    [ -z "$_lz_line" ] && continue
+    eval "_lz_prepend \"$_lz_line\""
+  done < "$_lz_user_paths"
+fi
+unset _lz_user_paths _lz_line
+
 export PATH
 
 unset -f _lz_prepend _lz_append
