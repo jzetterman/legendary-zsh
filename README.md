@@ -115,17 +115,32 @@ Ported from [Omarchy](https://github.com/basecamp/omarchy):
 
 ## Customization
 
-Add your own configuration at the bottom of `~/.zshrc` after the legendary-zsh loading.
+legendary-zsh is designed to stay out of your way. Your customizations go in files the framework never touches — they survive every `legendary-update`.
 
-### Using legendary-zsh in bash
+### `~/.config/legendary-zsh/local.zsh` — the recommended place
 
-legendary-zsh targets zsh and does not manage `~/.bashrc`. If you'd like the aliases, functions, and tool integrations available when you fall back to bash, add this line to your `~/.bashrc`:
+Sourced automatically if it exists. Fully yours — legendary-zsh never writes to, modifies, or deletes this file. Put anything zsh-specific here:
 
-```bash
-source ~/.local/share/legendary-zsh/shell/all
+```zsh
+# Use vim instead of nvim
+export EDITOR=vim
+
+# Switch to vi-mode keybindings
+bindkey -v
+
+# Override a default alias to keep the system `ls` for shell scripts
+unalias ls 2>/dev/null
+
+# Your own aliases and functions
+alias gs='git status -sb'
+weather() { curl -s "wttr.in/$1"; }
 ```
 
-### Adding directories to PATH
+### Below the marker in `~/.zshrc`
+
+Everything you add after the `# Add your own customizations below` marker in `~/.zshrc` is preserved across setup re-runs. `local.zsh` is usually cleaner, but this works if you prefer everything in one file.
+
+### `~/.config/legendary-zsh/paths` — for PATH entries
 
 Two ways to add a directory to your `PATH` that survive new shells, reboots, and `legendary-update`:
 
@@ -144,13 +159,29 @@ $HOME/.config/hypr/scripts
 
 Both write to the same file. Entries support `$HOME` and `~/`, duplicates are skipped, and directories that don't exist at shell startup are silently ignored. Open a new shell (or `source ~/.zshrc`) to pick up changes.
 
+### Using legendary-zsh in bash
+
+legendary-zsh targets zsh and does not manage `~/.bashrc`. If you'd like the aliases, functions, and tool integrations available when you fall back to bash, add this line to your `~/.bashrc`:
+
+```bash
+source ~/.local/share/legendary-zsh/shell/all
+```
+
 ## Uninstall
 
 ```bash
-rm -rf ~/.local/share/legendary-zsh
+legendary-uninstall
 ```
 
-Restore your shell config from backups (saved as `~/.zshrc.backup-*` and `~/.bashrc.backup-*`).
+This:
+
+- Restores `~/.zshrc` from its most recent backup (or removes it if there was no prior file).
+- Restores `~/.config/starship.toml` from backup if one exists; otherwise removes it only if it still matches legendary's bundled version (your customizations are left in place).
+- Removes `~/.inputrc` only if it still matches legendary's bundled version.
+- Restores your original default shell (if it was changed to zsh).
+- Removes `~/.local/share/legendary-zsh` and `~/.local/state/legendary-zsh`.
+
+Files that legendary-zsh never managed — `~/.bashrc`, anything in `~/.config/legendary-zsh/` (your `local.zsh`, `paths`) — are left alone.
 
 ## Credits
 
