@@ -54,15 +54,37 @@ if [ -f "${BASHRC}" ]; then
 fi
 cp "${BASHRC_TEMPLATE}" "${BASHRC}"
 
-# Install inputrc (bash reads ~/.inputrc directly)
-cp -f "${INPUTRC_SRC}" "${HOME}/.inputrc"
-
-# Install starship config (backing up any existing one)
-mkdir -p "${HOME}/.config"
-if [ -f "${STARSHIP_CONFIG}" ]; then
-  cp "${STARSHIP_CONFIG}" "${STARSHIP_BACKUP}"
+# Install inputrc (for bash fallback — bash reads ~/.inputrc directly).
+# Skip if the user already has one so we don't clobber their readline config.
+if [ ! -f "${HOME}/.inputrc" ]; then
+  cp "${INPUTRC_SRC}" "${HOME}/.inputrc"
 fi
-cp "${STARSHIP_TEMPLATE}" "${STARSHIP_CONFIG}"
+
+# Install starship config. If the user has one already, prompt before replacing.
+mkdir -p "${HOME}/.config"
+STATE_DIR="${HOME}/.local/state/legendary-zsh"
+mkdir -p "$STATE_DIR"
+STARSHIP_PROMPTED_MARKER="$STATE_DIR/starship-prompted"
+if [ ! -f "${STARSHIP_CONFIG}" ]; then
+  cp "${STARSHIP_TEMPLATE}" "${STARSHIP_CONFIG}"
+elif [ ! -f "$STARSHIP_PROMPTED_MARKER" ]; then
+  echo ""
+  echo "You have an existing ~/.config/starship.toml."
+  echo "Replace it with legendary-zsh's config? Your current config will be backed up."
+  wants_starship=false
+  if command -v gum &>/dev/null; then
+    gum confirm "" && wants_starship=true || true
+  else
+    printf "(y/N) "
+    read -r reply
+    [[ "$reply" =~ ^[Yy] ]] && wants_starship=true
+  fi
+  if [ "$wants_starship" = true ]; then
+    cp "${STARSHIP_CONFIG}" "${STARSHIP_BACKUP}"
+    cp "${STARSHIP_TEMPLATE}" "${STARSHIP_CONFIG}"
+  fi
+  touch "$STARSHIP_PROMPTED_MARKER"
+fi
 
 # Mark all current migrations as already run (fresh install needs none)
 MIGRATIONS_STATE="${HOME}/.local/state/legendary-zsh/migrations"
@@ -90,8 +112,6 @@ if [ -f "${STARSHIP_BACKUP}" ]; then
 fi
 
 # Offer to switch default shell to zsh (only asks once)
-STATE_DIR="${HOME}/.local/state/legendary-zsh"
-mkdir -p "$STATE_DIR"
 _shell_changed=false
 
 if [ ! -f "$STATE_DIR/chsh-prompted" ]; then
