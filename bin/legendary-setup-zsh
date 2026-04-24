@@ -3,14 +3,11 @@
 LEGENDARY_ZSH_HOME="${HOME}/.local/share/legendary-zsh"
 PLUGINS_DIR="${LEGENDARY_ZSH_HOME}/plugins"
 ZSHRC="${HOME}/.zshrc"
-BASHRC="${HOME}/.bashrc"
 ZSHRC_TEMPLATE="${LEGENDARY_ZSH_HOME}/templates/zshrc"
-BASHRC_TEMPLATE="${LEGENDARY_ZSH_HOME}/templates/bashrc"
 INPUTRC_SRC="${LEGENDARY_ZSH_HOME}/shell/inputrc"
 STARSHIP_TEMPLATE="${LEGENDARY_ZSH_HOME}/templates/starship"
 STARSHIP_CONFIG="${HOME}/.config/starship.toml"
 ZSHRC_BACKUP="${HOME}/.zshrc.backup-$(date +%Y%m%d-%H%M%S)"
-BASHRC_BACKUP="${HOME}/.bashrc.backup-$(date +%Y%m%d-%H%M%S)"
 STARSHIP_BACKUP="${HOME}/.config/starship.toml.backup-$(date +%Y%m%d-%H%M%S)"
 
 echo "Setting up legendary-zsh..."
@@ -48,13 +45,7 @@ if [ -n "${USER_CUSTOMIZATIONS}" ]; then
   printf '\n%s\n' "${USER_CUSTOMIZATIONS}" >> "${ZSHRC}"
 fi
 
-# Install bash auto-launch
-if [ -f "${BASHRC}" ]; then
-  cp "${BASHRC}" "${BASHRC_BACKUP}"
-fi
-cp "${BASHRC_TEMPLATE}" "${BASHRC}"
-
-# Install inputrc (for bash fallback — bash reads ~/.inputrc directly).
+# Install inputrc (bash reads ~/.inputrc directly; zsh does not read it).
 # Skip if the user already has one so we don't clobber their readline config.
 if [ ! -f "${HOME}/.inputrc" ]; then
   cp "${INPUTRC_SRC}" "${HOME}/.inputrc"
@@ -101,10 +92,6 @@ echo -e "\033[32m✓ legendary-zsh setup complete\033[0m"
 if [ -f "${ZSHRC_BACKUP}" ]; then
   echo "  - Original .zshrc backed up to:"
   echo "    ${ZSHRC_BACKUP}"
-fi
-if [ -f "${BASHRC_BACKUP}" ]; then
-  echo "  - Original .bashrc backed up to:"
-  echo "    ${BASHRC_BACKUP}"
 fi
 if [ -f "${STARSHIP_BACKUP}" ]; then
   echo "  - Original starship.toml backed up to:"

@@ -19,17 +19,22 @@ if [ "$wants_uninstall" != true ]; then
   exit 0
 fi
 
-# Restore dotfiles from backups
-for dotfile in .zshrc .bashrc; do
-  current="${HOME}/${dotfile}"
-  latest_backup="$(ls -t "${HOME}/${dotfile}.backup-"* 2>/dev/null | head -1)"
-  if [ -n "$latest_backup" ]; then
-    cp "$latest_backup" "$current"
-    echo -e "\033[32m✓\033[0m Restored ${dotfile} from backup"
-  else
-    rm -f "$current"
-  fi
-done
+# Restore .zshrc from backup, or remove it (always managed by legendary-zsh)
+latest_zshrc_backup="$(ls -t "${HOME}/.zshrc.backup-"* 2>/dev/null | head -1)"
+if [ -n "$latest_zshrc_backup" ]; then
+  cp "$latest_zshrc_backup" "${HOME}/.zshrc"
+  echo -e "\033[32m✓\033[0m Restored .zshrc from backup"
+else
+  rm -f "${HOME}/.zshrc"
+fi
+
+# Restore .bashrc only if a legacy backup exists. legendary-zsh no longer
+# manages ~/.bashrc, so never remove a user-owned one.
+latest_bashrc_backup="$(ls -t "${HOME}/.bashrc.backup-"* 2>/dev/null | head -1)"
+if [ -n "$latest_bashrc_backup" ]; then
+  cp "$latest_bashrc_backup" "${HOME}/.bashrc"
+  echo -e "\033[32m✓\033[0m Restored .bashrc from backup"
+fi
 
 # Remove ~/.inputrc only if it matches legendary-zsh's version
 # (leave user-owned readline configs alone)

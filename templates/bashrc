@@ -1,8 +1,0 @@
-# If not running interactively, don't do anything (leave this at the top of this file)
-[[ $- != *i* ]] && return
-
-# Load shared shell configuration (bash fallback when zsh is unavailable)
-export LEGENDARY_ZSH_HOME="${HOME}/.local/share/legendary-zsh"
-[[ -f "$LEGENDARY_ZSH_HOME/shell/all" ]] && source "$LEGENDARY_ZSH_HOME/shell/all"
-
-# Add your own exports, aliases, and functions below.
