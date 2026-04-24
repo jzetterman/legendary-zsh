@@ -93,6 +93,14 @@ Ported from [Omarchy](https://github.com/basecamp/omarchy):
 
 Add your own configuration at the bottom of `~/.zshrc` after the legendary-zsh loading.
 
+### Using legendary-zsh in bash
+
+legendary-zsh targets zsh and does not manage `~/.bashrc`. If you'd like the aliases, functions, and tool integrations available when you fall back to bash, add this line to your `~/.bashrc`:
+
+```bash
+source ~/.local/share/legendary-zsh/shell/all
+```
+
 ### Adding directories to PATH
 
 Two ways to add a directory to your `PATH` that survive new shells, reboots, and `legendary-update`:

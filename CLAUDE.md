@@ -4,21 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-legendary-zsh is a cross-platform zsh configuration framework. It installs shell plugins, dotfiles, aliases, functions, and tool integrations for zsh (with bash fallback). Supports macOS (brew), Arch (pacman), Ubuntu/Debian (apt), and Fedora (dnf).
+legendary-zsh is a cross-platform zsh configuration framework. It installs shell plugins, dotfiles, aliases, functions, and tool integrations for zsh. Supports macOS (brew), Arch (pacman), Ubuntu/Debian (apt), and Fedora (dnf).
 
 ## Architecture
 
 ### Install & Update Flow
 
 - **`install.sh`** — curl|bash entry point. Clones repo to `~/.local/share/legendary-zsh`, then runs `legendary-install-deps` and `legendary-setup-zsh`.
-- **`bin/legendary-setup-zsh`** — First-time setup: clones zsh plugins, deploys templates to `~/.zshrc`/`~/.bashrc`/`~/.inputrc`, marks all migrations as run.
+- **`bin/legendary-setup-zsh`** — First-time setup: clones zsh plugins, deploys `~/.zshrc` (preserving user customizations below the marker), deploys `~/.inputrc` only if absent, prompts before replacing `~/.config/starship.toml`, marks all migrations as run.
 - **`bin/legendary-update`** — User-facing update: `git pull --ff-only`, runs migrations, installs new deps, re-offers fastfetch.
 - **`bin/legendary-migrate`** — Runs pending `migrations/*.sh` files, tracks completed ones in `~/.local/state/legendary-zsh/migrations/`.
 - **`bin/legendary-install-deps`** — Installs missing system dependencies (git, zsh, fzf, starship, zoxide, eza, gum) with OS-appropriate package managers.
 
 ### Shell Sourcing Chain
 
-**Zsh** (`templates/zshrc` → `~/.zshrc`):
+`templates/zshrc` → `~/.zshrc`:
 ```
 shell/zoptions → shell/plugins → compinit → shell/tmux → shell/all
                                                            ├─ shell/envs
@@ -27,9 +27,7 @@ shell/zoptions → shell/plugins → compinit → shell/tmux → shell/all
                                                            └─ shell/inits
 ```
 
-**Bash** (`templates/bashrc` → `~/.bashrc`): auto-launches zsh if available, otherwise sources `shell/all`.
-
-`shell/all` is the shared entry point for both shells. `shell/zoptions`, `shell/plugins`, and `shell/tmux` are zsh-only.
+legendary-zsh does not manage `~/.bashrc`. Users who want the aliases, functions, and tool integrations in bash can add `source ~/.local/share/legendary-zsh/shell/all` to their own `~/.bashrc`.
 
 ### Key Paths
 
@@ -43,7 +41,6 @@ shell/zoptions → shell/plugins → compinit → shell/tmux → shell/all
 - **All aliases/inits guard on `command -v`** — nothing breaks if a tool is missing.
 - **OS detection** pattern: check `$OSTYPE` for macOS, then `command -v pacman/apt-get/dnf` for Linux distros.
 - **Idempotent**: every script is safe to run multiple times.
-- **Backups**: setup creates timestamped backups of existing dotfiles before overwriting.
+- **Backups**: setup creates timestamped backups of `~/.zshrc` (always) and `~/.config/starship.toml` (when replacing) before overwriting.
 - **Migrations**: numbered `YYYYMMDD_description.sh` files in `migrations/`. Fresh installs skip all existing migrations. The migrate script uses `set -e`.
-- **State markers**: one-time prompts (like fastfetch) use touch files in `~/.local/state/legendary-zsh/` to avoid re-prompting.
-- **`install.sh` is wrapped in `main()`** to prevent curl|bash stdin consumption by subprocesses.
+- **State markers**: one-time prompts (fastfetch, starship, chsh) use touch files in `~/.local/state/legendary-zsh/` to avoid re-prompting.
