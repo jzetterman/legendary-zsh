@@ -31,7 +31,30 @@ for dotfile in .zshrc .bashrc; do
   fi
 done
 
-rm -f "${HOME}/.inputrc"
+# Remove ~/.inputrc only if it matches legendary-zsh's version
+# (leave user-owned readline configs alone)
+INPUTRC_SRC="${LEGENDARY_ZSH_HOME}/shell/inputrc"
+if [ -f "${HOME}/.inputrc" ] && [ -f "$INPUTRC_SRC" ] && cmp -s "${HOME}/.inputrc" "$INPUTRC_SRC"; then
+  rm -f "${HOME}/.inputrc"
+  echo -e "\033[32m✓\033[0m Removed legendary-zsh's ~/.inputrc"
+elif [ -f "${HOME}/.inputrc" ]; then
+  echo "Note: ~/.inputrc is not managed by legendary-zsh — left in place."
+fi
+
+# Restore ~/.config/starship.toml from backup if one exists;
+# otherwise remove only if it matches our template (leave user edits alone).
+STARSHIP_CONFIG="${HOME}/.config/starship.toml"
+STARSHIP_TEMPLATE="${LEGENDARY_ZSH_HOME}/templates/starship"
+latest_starship_backup="$(ls -t "${HOME}/.config/starship.toml.backup-"* 2>/dev/null | head -1)"
+if [ -n "$latest_starship_backup" ]; then
+  cp "$latest_starship_backup" "$STARSHIP_CONFIG"
+  echo -e "\033[32m✓\033[0m Restored starship.toml from backup"
+elif [ -f "$STARSHIP_CONFIG" ] && [ -f "$STARSHIP_TEMPLATE" ] && cmp -s "$STARSHIP_CONFIG" "$STARSHIP_TEMPLATE"; then
+  rm -f "$STARSHIP_CONFIG"
+  echo -e "\033[32m✓\033[0m Removed legendary-zsh's starship.toml"
+elif [ -f "$STARSHIP_CONFIG" ]; then
+  echo "Note: ~/.config/starship.toml has been modified — left in place."
+fi
 
 # Restore original default shell
 _shell_changed=false
